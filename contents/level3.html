@@ -1,0 +1,293 @@
+<!DOCTYPE html><html><head><title>“调查员”的电子重现</title><link rel="stylesheet" href="../assets/css/default.css"></head><body><div class="article-body" data-yacho-content="level3" data-yacho-format="html"><!-- ========================================== -->
+<!-- ARG 剧情推进三部曲（记事本-黑暗拼图-红色警告）START -->
+<!-- ========================================== -->
+
+<style>
+    /* 全局重置 */
+    body, html {
+        margin: 0; padding: 0; width: 100%; height: 100%;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+    }
+    
+    /* 控制页面切换，默认全隐藏 */
+    .page { display: none; width: 100%; min-height: 100vh; padding: 40px 20px; box-sizing: border-box; }
+    .page.active { display: flex; flex-direction: column; align-items: center; }
+    
+    /* 内容盒子通用样式 */
+    .content-box {
+        max-width: 750px; width: 100%;
+        border-radius: 6px; padding: 40px;
+        box-sizing: border-box; margin: auto; /* 上下居中 */
+        display: flex; flex-direction: column;
+    }
+
+    /* ========== 第一页：电子记事本（黄） ========== */
+    #page1 { background-color: #fbf3d5; } /* 复古纸张黄 */
+    #page1 .content-box {
+        background-color: #fffdf0; border: 1px solid #e2d6b0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        font-family: "Courier New", Courier, monospace; /* 打字机字体感 */
+    }
+    #page1 h1 { color: #4a3b22; font-size: 26px; margin-top: 0; border-bottom: 2px solid #e2d6b0; padding-bottom: 15px; }
+    #page1 .text-body { color: #5c4e3a; font-size: 16px; line-height: 1.8; }
+    #page1 .input-area {
+        margin-top: 30px; padding-top: 20px; border-top: 1px dashed #e2d6b0;
+        display: flex; align-items: center;
+    }
+    #page1 .input-label { color: #8c7a5c; margin-right: 15px; white-space: nowrap; }
+    #page1 input {
+        flex: 1; padding: 10px; background: #fbf3d5; border: 1px solid #d4c5a0; 
+        border-radius: 4px; outline: none; color: #4a3b22; font-family: "Courier New", monospace;
+    }
+    #page1 input:focus { border-color: #8c7a5c; }
+
+  .secret-box {
+    background-color: #000;
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 2px;
+}
+
+.secret-box::selection {
+    background: #ff0000;
+    color: #000;
+}
+
+    /* ========== 第二页：黑暗拼图（黑） ========== */
+    #page2 { background-color: #121212; }
+    #page2 .content-box { background-color: #1e1e1e; border: 1px solid #333; color: #ccc; }
+    #page2 h1 { color: #e0e0e0; font-size: 24px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; }
+    #page2 .text-body { color: #aaa; font-size: 15px; line-height: 1.8; }
+    
+    /* 3x3 拖拽拼图区域 */
+    .puzzle-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        width: 100%; max-width: 420px; margin: 30px auto; 
+        background: #000; padding: 8px; border-radius: 4px;
+    }
+    .puzzle-item {
+        aspect-ratio: 4 / 3; background-color: #2a2a2a; border: 1px dashed #444;
+        display: flex; justify-content: center; align-items: center; overflow: hidden;
+        cursor: grab; transition: border 0.2s;
+    }
+    .puzzle-item:active { cursor: grabbing; }
+    .puzzle-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .puzzle-item.drag-over { border: 2px dashed #fff; } /* 拖拽悬停时的提示 */
+
+    #page2 .input-area { display: flex; align-items: center; margin-top: 10px; }
+    #page2 .input-label { color: #666; margin-right: 15px; white-space: nowrap; }
+    #page2 input {
+        flex: 1; padding: 10px; background: #2a2a2a; border: 1px solid #444; 
+        border-radius: 4px; outline: none; color: #fff;
+    }
+    #page2 input:focus { border-color: #888; }
+
+    /* ========== 第三页：红色警告（红） ========== */
+    #page3 { 
+        background: linear-gradient(135deg, #2a0000 0%, #4a0000 100%); /* 深红渐变，避免纯红刺眼 */
+    }
+    #page3 .content-box { background: rgba(0,0,0,0.3); border: 1px solid #7a0000; color: #f0e6e6; text-align: center; }
+    #page3 h1 { color: #ffb3b3; font-size: 28px; letter-spacing: 2px; margin-top: 0; border-bottom: 1px solid #7a0000; padding-bottom: 15px; }
+    #page3 .text-body { font-size: 16px; line-height: 1.8; text-align: left; margin-bottom: 40px; }
+    #page3 .jump-link-area {
+        text-align: center; padding: 20px; border: 1px dashed #cc6666;
+        border-radius: 4px; margin-top: auto; /* 推到底部 */
+    }
+    #page3 .jump-link-area a {
+        color: #ffcccc; text-decoration: none; font-weight: bold; font-size: 18px;
+        display: inline-block; padding: 10px 20px; border: 1px solid #ffcccc;
+        border-radius: 4px; transition: all 0.3s;
+    }
+    #page3 .jump-link-area a:hover { background: #ffcccc; color: #4a0000; }
+
+    /* ========== 自定义提示弹窗 ========== */
+    #custom-toast {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9); color: #fff;
+        padding: 15px 35px; border-radius: 4px; font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999999;
+        display: none; text-align: center; font-weight: bold;
+        pointer-events: none; animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; top: 40%; } to { opacity: 1; top: 50%; } }
+</style>
+
+<!-- ==================== 第一页：电子记事本 ==================== -->
+<div id="page1" class="page active">
+    <div class="content-box">
+        <h1>D的记忆 一</h1>
+        <div class="text-body">
+            <p>这是我掉到这里的第一天，我不知道发生了什么。睁开眼，我身处一个小房间之内，其中只有一扇紧闭的门</p>
+            <p>我推开了那扇门，里面是无尽的黑暗。我唯有前进一种选择。</p>
+            <p>&nbsp;</p>
+            <p>空气变得越来越潮湿了，通道内开始变得昏暗，所幸我在一个拐角找到了一瓶水、一些饼干和一支手电筒，看来这里并不是空无一人。</p>
+            <p>我走了多久了？可能有半个小时了。这里除了走廊和拐角外什么都没有，我只能通过自言自语的方式保持理智。或者我已经疯了？</p>
+            <p>终于！我在一个拐角发现了除了我以外的东西，我已经把饼干吃掉一半了。在拐角这有一件破衣服，我差点就忽视了它。&nbsp;可惜了，这件外衣已经破的不成样子，我找不到任何有关它主人的线索。外衣都快破成碎布了，上面一堆水渍还混着腥气，我还是把它留在原处为好。</p>
+            <p>&nbsp;</p>
+            <p>手电筒已经没电了，我试图摸着墙回去，墙上好像有什么凸起<span class="secret-box">继续向前走</span>。</p>
+            <p>我的头好疼，我得摸出墙上的文字。</p>
+        </div>
+        
+        <!-- 输入栏 -->
+        <div class="input-area">
+            <input type="text" id="page1Input" placeholder="在此输入...">
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 第二页：黑暗拼图 ==================== -->
+<div id="page2" class="page">
+    <div class="content-box">
+        <h1>D的记忆 二</h1>
+        <div class="text-body">
+            <p>我 继 续 向 前 走 。</p>
+            <p>我看到了光亮，前面出现了光亮，上天果然是眷顾我的，我向前走果然是正确的选择，我...</p>
+            <p>不行，头又痛了，总之先到光亮处再说吧。</p>
+            <p>&nbsp;</p>
+            <p>我找到了一个房间，右面是广阔无边的水面。地面上有一块石头，周边有点符阵似的圈，远处还有滩深红色的物质，像...血？</p>
+            <p>我已经走了不知道多久了，水早就喝光了。或许喝一下这来路不明的水也不会怎么样？</p>
+            <p>。。。可惜了，是海水，咸的没法喝。</p>
+            <p>是我的错觉吗？仿佛踏入房间后就一直有什么东西盯着我看。</p>
+            <p>我现在不敢发出声了，或许我应该看看这里的东西怎么为我所用。</p>
+            <p>我拿起那块石头，底下压着一张纸。</p>
+            <p>&nbsp;</p>
+            <p>龘靐齉爩鱻麤龗灪龖厵爨癵驫麣纞虋讟钃鸜麷鞻韽韾顟顠饙騳騱饐𠮷...我说了什么？头还是好疼，先把那张纸看一下再说吧。</p>
+        </div>
+        
+        <!-- 3x3 拖拽拼图区域 -->
+        <div class="puzzle-grid" id="puzzleGrid">
+            <!-- 🖼️ 照片位置：这里的 9 个 img，你需要把 src 换成你的图片路径 -->
+            <!-- 特别注意：如果你放入了图片，请确保图片能正常显示，拖拽是基于图片交换的 -->
+            <div class="puzzle-item" draggable="true"><img src=" /media/img/n1.jpg" alt="碎片1"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n6.jpg" alt="碎片2"></div>
+            <div class="puzzle-item" draggable="true"><img src=" /media/img/n2.jpg" alt="碎片3"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n8.jpg" alt="碎片4"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n7.jpg" alt="碎片5"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n4.jpg" alt="碎片6"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n9.jpg" alt="碎片7"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n3.jpg" alt="碎片8"></div>
+            <div class="puzzle-item" draggable="true"><img src="/media/img/n5.jpg" alt="碎片9"></div>
+        </div>
+        
+        <!-- 输入栏 -->
+        <div class="input-area">
+            <input type="text" id="page2Input" placeholder="在此输入...">
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 第三页：红色警告 ==================== -->
+<div id="page3" class="page">
+    <div class="content-box">
+        <h1>海水上涨了。</h1>
+        <div class="text-body">
+            <p>我立刻往房间的门跑去。</p>
+            <p>那扇门消失了，仿佛从未存在过。</p>
+            <p>海水没过了我。</p>
+            <p>在深处，我看见了什么东西在向我移动。</p>
+            <p><span style="color: red;">我 终 于 理 解 了 。</span></p>
+        </div>
+        
+        <!-- 底部居中文本区，供你放置跳转链接 -->
+        <div class="jump-link-area">
+            <!-- 📝 在这个 <a> 标签的 href 里填入你的链接，比如 href="level-2.html" -->
+            <a href="level4.html">注视</a>
+        </div>
+    </div>
+</div>
+
+<!-- 自定义弹窗容器 -->
+<div id="custom-toast"></div>
+
+<script>
+    // ========== 自定义提示弹窗 ==========
+    function showToast(message) {
+        var toast = document.getElementById('custom-toast');
+        toast.innerText = message;
+        toast.style.display = 'block';
+        setTimeout(function() { toast.style.display = 'none'; }, 2000);
+    }
+
+    // ========== 页面切换函数 ==========
+    function switchPage(currentPageId, nextPageId) {
+        document.getElementById(currentPageId).classList.remove('active');
+        document.getElementById(nextPageId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // ========== 第一页输入逻辑 ==========
+    // 🚨 你稍微想好第一页的密码后，把下面的 "密码1" 替换掉即可
+    document.getElementById('page1Input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var inputVal = this.value.trim();
+            if (inputVal === '继续向前走') { // <--- 在这里替换成你想要的第一页解锁密码
+                switchPage('page1', 'page2');
+            } else {
+                showToast('内容错误，请重新输入');
+            }
+            this.value = '';
+        }
+    });
+
+    // ========== 第二页输入逻辑（密钥固定为 Sephanterich） ==========
+    document.getElementById('page2Input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var inputVal = this.value.trim();
+            if (inputVal === 'Sephanterich'|| inputVal === '斯芬特里奇') {
+                switchPage('page2', 'page3');
+            } else {
+                showToast('密钥错误');
+            }
+            this.value = '';
+        }
+    });
+
+    // ========== 3x3 拼图拖拽功能实现 ==========
+    const puzzleItems = document.querySelectorAll('.puzzle-item');
+    
+    // 记录被拖拽的元素
+    let draggedItem = null;
+
+    puzzleItems.forEach(item => {
+        // 开始拖拽时触发
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            // 延迟一点设置透明度，否则拖拽时可能会出现拖影
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        });
+
+        // 拖拽结束
+        item.addEventListener('dragend', function(e) {
+            this.style.opacity = '1';
+            draggedItem = null;
+        });
+
+        // 拖拽到目标上方，阻止默认行为才能触发 drop
+        item.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        });
+
+        // 离开目标区域
+        item.addEventListener('dragleave', function(e) {
+            this.classList.remove('drag-over');
+        });
+
+        // 放置目标
+        item.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (draggedItem && draggedItem !== this) {
+                // 交换两张图片的 src 属性
+                const tempSrc = this.querySelector('img').src;
+                this.querySelector('img').src = draggedItem.querySelector('img').src;
+                draggedItem.querySelector('img').src = tempSrc;
+            }
+        });
+    });
+</script>
+<!-- ========================================== -->
+<!-- ARG 剧情推进三部曲 END -->
+<!-- ========================================== --></div></body></html>

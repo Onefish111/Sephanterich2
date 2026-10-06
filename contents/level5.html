@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style>
+body {
+    margin: 0; padding: 40px;
+    background: #f7f7f7;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: #222;
+}
+
+.container {
+    display: flex;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 75vh;
+    align-items: center;
+}
+
+/* ================= 左侧栏 ================= */
+.left {
+    width: 380px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding-right: 40px;
+    border-right: 1px solid #ccc;
+    align-self: stretch;
+}
+
+/* 左上：网址区 */
+.url-area {
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ccc;
+}
+.url-area a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    word-break: break-all;
+}
+.url-area a:hover {
+    text-decoration: underline;
+}
+
+/* 左中：密码区 */
+.password-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 30px;
+}
+.password-area input {
+    width: 100%;
+    padding: 18px 20px;
+    font-size: 16px;
+    letter-spacing: 4px;
+    border: none;
+    border-bottom: 2px solid #222;
+    background: transparent;
+    outline: none;
+    color: #222;
+    font-family: "Courier New", monospace;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    text-align: center;
+}
+.password-area input:focus {
+    border-bottom-color: #1a73e8;
+}
+
+/* ================= 右侧：谜语区 ================= */
+.riddle-area {
+    flex: 1;
+    padding-left: 40px;
+    font-size: 16px;
+    line-height: 1.9;
+    color: #333;
+    white-space: pre-wrap;
+    font-family: "KaiTi", "STKaiti", "PingFang SC", serif;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .container { flex-direction: column; align-items: stretch; }
+    .left {
+        width: 100%;
+        padding-right: 0;
+        padding-bottom: 30px;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+    .riddle-area { padding-left: 0; padding-top: 30px; }
+}
+</style>
+<link rel="stylesheet" href="../assets/css/default.css">
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <!-- ========== 左上：网址区 ========== -->
+        <div class="url-area">
+            <!-- 📝 把 # 换成B站网址，文字改成你想显示的内容 -->
+            <a href="https://www.bilibili.com/opus/1255750039698931769?spm_id_from=333.1387.0.0" target="_blank">一个孩子的电子日记</a>
+        </div>
+
+        <!-- ========== 左中：密码区 ========== -->
+        <div class="password-area">
+            <!-- 📝 密码输入框 -->
+            <input type="text" id="passwordInput" autocomplete="off">
+        </div>
+    </div>
+
+    <!-- ========== 右侧：谜语区 ========== -->
+    <div class="riddle-area">当众人皆生向前索取之心，它们所需要的只是一个力量。它们退一步、回想起了自己的身份；退二步，它们明白了生命的意义；退三步，它们明白了贪欲之可怖；退四步，它们将寻回最初的自我</div>
+</div>
+
+<script>
+document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        var pwd = this.value.replace(/\s/g, '');
+        // 📝 把 'Chimeraareyoumyfriend' 换成真正的密码
+        if (pwd === 'Chimeraareyoumyfriend') {
+            // 🚨 密码正确后跳转到 path 路径
+            window.location.href = 'level6.html';
+        }
+    }
+});
+</script>
+</body>
+</html>

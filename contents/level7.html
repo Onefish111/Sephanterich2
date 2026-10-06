@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0; padding: 0;
+        background: #000 !important;
+        color: #cc0000 !important;
+        font-family: "Courier New", Courier, monospace;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    #typewriter-container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+    }
+
+    #typewriter-text {
+        font-size: 28px;
+        line-height: 1.8;
+        letter-spacing: 2px;
+        max-width: 800px;
+        text-shadow: 0 0 12px rgba(204, 0, 0, 0.7);
+        min-height: 60px;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 14px; height: 28px;
+        background: #cc0000;
+        animation: blink 0.8s infinite;
+        vertical-align: middle;
+        margin-left: 4px;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+
+    #input-area {
+        display: none;
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    #userInput {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #cc0000;
+        color: #cc0000;
+        font-size: 22px;
+        font-family: "Courier New", monospace;
+        padding: 10px 20px;
+        outline: none;
+        text-align: center;
+        letter-spacing: 3px;
+        width: 320px;
+        transition: box-shadow 0.3s;
+    }
+    #userInput:focus {
+        box-shadow: 0 6px 20px rgba(204, 0, 0, 0.4);
+    }
+
+    /* ================= 假的浏览器错误页面 ================= */
+    #error-page {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #fff;
+        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+        z-index: 99999;
+        flex-direction: column;
+    }
+
+    .error-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+    }
+
+    .error-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        color: #d93025;
+    }
+
+    .error-content h1 {
+        font-size: 26px;
+        font-weight: 500;
+        color: #202124;
+        margin: 0 0 15px;
+    }
+
+    .error-content p {
+        font-size: 15px;
+        color: #5f6368;
+        line-height: 1.7;
+        margin: 5px 0;
+    }
+
+    .error-code {
+        font-size: 13px;
+        color: #999;
+        margin-top: 30px;
+        font-family: monospace;
+    }
+</style>
+<link rel="stylesheet" href="../assets/css/default.css">
+</head>
+<body>
+
+<!-- ================= 打字机主页面 ================= -->
+<div id="typewriter-container">
+    <div id="typewriter-text"></div>
+    <div id="input-area">
+        <input type="text" id="userInput" autocomplete="off">
+    </div>
+</div>
+
+<!-- ================= 假的浏览器错误页面 ================= -->
+<div id="error-page">
+    <div class="error-content">
+        <div class="error-icon">⚠️</div>
+        <h1>该网页已永久失效</h1>
+        <p>您访问的页面已被永久删除。</p>
+        <p>此链接可能已过期，或被管理员移除。</p>
+        <div class="error-code">ERR_PAGE_PERMANENTLY_GONE</div>
+    </div>
+</div>
+
+<script>
+    var linesBeforeInput = [
+        "这就是“奇美拉”的故事了",
+        "那个小孩打开了门，然后这一切就画上了尾声",
+        "什么？你问我那个小孩最后怎么了？",
+        "那还用说吗，他成为了“奇美拉”的一份子。",
+        "总之，看了这么久了，想必你应该能够回答我一个问题：",
+        "谁是“斯芬特里奇”？"
+    ];
+
+    var linesAfterInput = [
+        "很好，看来你已经有了自己的答案",
+        "也许你比我自己还了解我",
+        "远胜于那些贪婪的、充斥欲望的许愿者",
+        "至少现在，我不需要考虑你究竟如何",
+        "按理说在结尾应该有一个报幕表，但它不在这里。"
+    ];
+
+    var TYPE_SPEED = 80;
+    var HOLD_TIME = 2500;
+    var BLANK_TIME = 500;
+
+    var typewriter = document.getElementById('typewriter-text');
+    var inputArea = document.getElementById('input-area');
+    var userInput = document.getElementById('userInput');
+    var errorPage = document.getElementById('error-page');
+    var container = document.getElementById('typewriter-container');
+
+    if (sessionStorage.getItem('arg_finished')) {
+        container.style.display = 'none';
+        errorPage.style.display = 'flex';
+    } else {
+        startSequence();
+    }
+
+    function sleep(ms) {
+        return new Promise(function(resolve) { setTimeout(resolve, ms); });
+    }
+
+    function typeLine(text) {
+        return new Promise(function(resolve) {
+            typewriter.innerHTML = '';
+            var i = 0;
+            function type() {
+                if (i < text.length) {
+                    typewriter.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+                    i++;
+                    setTimeout(type, TYPE_SPEED);
+                } else {
+                    typewriter.innerHTML = text + '<span class="cursor"></span>';
+                    resolve();
+                }
+            }
+            type();
+        });
+    }
+
+    function clearLine() {
+        typewriter.innerHTML = '';
+    }
+
+    async function startSequence() {
+        for (var i = 0; i < linesBeforeInput.length; i++) {
+            await typeLine(linesBeforeInput[i]);
+
+            if (i === linesBeforeInput.length - 1) {
+                await sleep(300);
+                inputArea.style.display = 'block';
+                userInput.focus();
+                typewriter.innerHTML = linesBeforeInput[i];
+                return;
+            }
+
+            await sleep(HOLD_TIME);
+            clearLine();
+            await sleep(BLANK_TIME);
+        }
+    }
+
+    userInput.addEventListener('keypress', async function(e) {
+        if (e.key === 'Enter') {
+            inputArea.style.display = 'none';
+            this.value = '';
+
+            clearLine();
+            await sleep(600);
+
+            for (var i = 0; i < linesAfterInput.length; i++) {
+                await typeLine(linesAfterInput[i]);
+                await sleep(HOLD_TIME);
+                clearLine();
+                await sleep(BLANK_TIME);
+            }
+
+            await sleep(800);
+            sessionStorage.setItem('arg_finished', 'true');
+            container.style.display = 'none';
+            errorPage.style.display = 'flex';
+        }
+    });
+</script>
+
+</body>
+</html>

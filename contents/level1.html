@@ -1,0 +1,707 @@
+<!DOCTYPE html><html><head><title>斯芬特里奇论坛</title><link rel="stylesheet" href="../assets/css/default.css"></head><body><div class="article-body" data-yacho-content="level1" data-yacho-format="html"><!-- ========================================== -->
+<!-- ARG 斯芬特里奇论坛 - 二次元风格改造版 START -->
+<!-- ========================================== -->
+
+<style>
+    /* ==========================================
+       🎨 全局样式：二次元粉蓝渐变、柔和可爱风
+       ========================================== */
+    body {
+        margin: 0; padding: 0;
+        background: linear-gradient(135deg, #fdfbfb 0%, #fce4ec 100%); /* 柔和粉白渐变 */
+        background-attachment: fixed;
+        font-family: "Comic Sans MS", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+        color: #5c3a4d; /* 深莓色文字，比纯黑柔和 */
+        overflow-x: hidden;
+    }
+
+    /* 顶部导航栏：半透明玻璃质感 */
+    .forum-topbar {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        height: 60px; display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px;
+        border-bottom: 2px solid #ffb6c1; /* 粉色底边 */
+        box-shadow: 0 4px 15px rgba(255, 117, 151, 0.15);
+        position: sticky; top: 0; z-index: 100;
+    }
+    .forum-logo-area {
+        width: 150px; height: 40px; background-color: #ffe4e1;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 20px; overflow: hidden; flex-shrink: 0;
+        border: 1px solid #ffb6c1;
+    }
+    .forum-logo-area img { width: 100%; height: 100%; object-fit: contain; }
+    .forum-title {
+        font-size: 20px; font-weight: bold; color: #ff7597; /* 亮粉色标题 */
+        letter-spacing: 2px; flex-shrink: 0;
+        text-shadow: 1px 1px 0 #fff, 2px 2px 0 rgba(255, 182, 193, 0.5);
+    }
+    .forum-nav-links { display: flex; gap: 20px; font-size: 14px; flex: 1; margin-left: 30px; }
+    .forum-nav-links a { color: #8b6b7d; text-decoration: none; transition: all 0.2s; cursor: pointer; font-weight: bold; }
+    .forum-nav-links a:hover { color: #ff7597; transform: scale(1.05); }
+
+    /* 搜索框：圆润可爱 */
+    .forum-search-area { width: 180px; text-align: right; flex-shrink: 0; }
+    .forum-search-area input {
+        width: 100%; padding: 8px 15px; border: 2px solid #ffb6c1;
+        border-radius: 20px; background-color: #fff0f5;
+        outline: none; font-size: 14px; transition: all 0.3s; box-sizing: border-box;
+        color: #5c3a4d;
+    }
+    .forum-search-area input:focus {
+        border-color: #ff7597; background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(255, 117, 151, 0.2);
+    }
+
+    /* 控制显示与隐藏 */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* 返回按钮：粉色渐变圆角 */
+    .back-btn {
+        display: inline-block; margin-bottom: 15px; padding: 8px 18px;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        color: #fff; border: none; border-radius: 20px; cursor: pointer;
+        font-size: 14px; font-weight: bold;
+        text-decoration: none; transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+    }
+    .back-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 154, 158, 0.6); }
+
+    /* 首页三栏布局 */
+    .home-layout { display: flex; gap: 20px; max-width: 1200px; margin: 20px auto; padding: 0 15px; align-items: flex-start; }
+    .sidebar-left { width: 200px; flex-shrink: 0; background: rgba(255, 255, 255, 0.85); border-radius: 16px; padding: 15px; box-shadow: 0 8px 25px rgba(255, 117, 151, 0.1); border: 1px solid rgba(255, 255, 255, 0.8); }
+    .sidebar-right { width: 280px; flex-shrink: 0; background: rgba(255, 255, 255, 0.85); border-radius: 16px; padding: 15px; box-shadow: 0 8px 25px rgba(255, 117, 151, 0.1); border: 1px solid rgba(255, 255, 255, 0.8); }
+    .main-content-center { flex: 1; min-width: 0; }
+
+    /* 侧边栏 */
+    .sidebar-title { font-size: 14px; font-weight: bold; color: #ff7597; margin-bottom: 10px; border-bottom: 2px dashed #ffb6c1; padding-bottom: 10px; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu li { padding: 10px 12px; font-size: 14px; color: #8b6b7d; cursor: pointer; border-radius: 12px; transition: all 0.2s; margin-bottom: 4px; font-weight: bold; }
+    .sidebar-menu li:hover { background: #fff0f5; color: #ff7597; transform: translateX(5px); }
+    .sidebar-menu li.active { background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 100%); color: #fff; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4); }
+
+    /* 右侧登录卡片 */
+    .login-card { text-align: center; padding: 25px 20px; border: 2px dashed #ffb6c1; border-radius: 16px; cursor: pointer; transition: all 0.3s; margin-bottom: 15px; background: #fff0f5; }
+    .login-card:hover { border-color: #ff7597; background: #ffe4e1; transform: scale(1.02); }
+    .login-avatar { font-size: 35px; margin-bottom: 10px; }
+    .login-text { font-size: 16px; font-weight: bold; color: #ff7597; margin-bottom: 5px; }
+    .login-desc { font-size: 12px; color: #b0889b; }
+
+    /* 统计卡片 */
+    .stats-card { padding: 15px 0; border-top: 1px dashed #ffb6c1; }
+    .stats-item { display: flex; justify-content: space-between; font-size: 13px; color: #8b6b7d; margin-bottom: 8px; font-weight: bold; }
+
+    /* 底部登录提示按钮 */
+    .more-content-btn { text-align: center; padding: 15px; font-size: 14px; color: #ff7597; font-weight: bold; cursor: pointer; border-top: 2px dashed #ffb6c1; margin-top: 10px; transition: all 0.2s; border-radius: 0 0 16px 16px; background: #fff0f5; }
+    .more-content-btn:hover { background: #ffe4e1; color: #ff4d6d; }
+
+    /* 帖子列表：圆角卡片 */
+    .forum-post-list { background: rgba(255, 255, 255, 0.9); border-radius: 16px; padding: 10px 20px; box-shadow: 0 8px 25px rgba(255, 117, 151, 0.1); border: 1px solid rgba(255, 255, 255, 0.8); }
+    .forum-post { padding: 20px 0; border-bottom: 1px dashed #ffb6c1; }
+    .forum-post:last-child { border-bottom: none; }
+    .post-header { display: flex; align-items: center; margin-bottom: 10px; }
+    .post-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: #ffe4e1; margin-right: 12px; overflow: hidden; border: 2px solid #ffb6c1; }
+    .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .post-username { font-size: 15px; font-weight: bold; color: #ff7597; }
+    .post-time { font-size: 12px; color: #b0889b; margin-left: 10px; }
+    .post-title { font-size: 18px; font-weight: bold; color: #5c3a4d; margin-bottom: 10px; }
+    .post-content { font-size: 14px; line-height: 1.6; color: #7a5b6b; margin-bottom: 15px; }
+
+    /* 评论区 */
+    .comment-section { background-color: #fff0f5; border-radius: 12px; padding: 12px 15px; margin-top: 10px; border: 1px solid #ffe4e1; }
+    .comment-title { font-size: 13px; color: #ff7597; margin-bottom: 10px; cursor: pointer; font-weight: bold; }
+    .comment-item { display: flex; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #ffb6c1; }
+    .comment-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .comment-avatar { width: 24px; height: 24px; border-radius: 50%; background-color: #ffe4e1; margin-right: 10px; overflow: hidden; flex-shrink: 0; border: 1px solid #ffb6c1; }
+    .comment-content { font-size: 13px; line-height: 1.4; color: #8b6b7d; }
+    .comment-username { font-weight: bold; color: #ff7597; margin-right: 5px; }
+
+    /* 其他搜索页面的通用内容框 */
+    .forum-main-content { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+
+    /* 自定义提示弹窗 */
+    #custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 117, 151, 0.95); color: #fff; padding: 15px 30px; border-radius: 20px; font-size: 16px; box-shadow: 0 4px 20px rgba(255, 117, 151, 0.4); z-index: 999999; display: none; text-align: center; font-weight: bold; pointer-events: none; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; top: 40%; } to { opacity: 1; top: 50%; } }
+
+  #red-screen-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ff0000; z-index: 99999; display: none; justify-content: center; align-items: center; color: white; font-size: 30px; font-weight: bold; }
+
+    /* ==========================================
+       🛡️ 以下为“草莓蛋糕”系列专属样式（完全保留旧版，不改成二次元风）
+       ========================================== */
+    #view-cake .key-area { text-align: right; margin-bottom: 15px; }
+    #view-cake .key-area input { padding: 6px 12px; border: 1px solid #1e80ff; border-radius: 4px; outline: none; width: 180px; font-size: 14px; }
+    #view-cake .info-list { background: #fff; border-radius: 6px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    #view-cake .info-row { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee; align-items: flex-start; }
+    #view-cake .info-row:last-child { border-bottom: none; }
+    #view-cake .info-photo { width: 80px; height: 80px; background-color: #eaeaea; border-radius: 4px; flex-shrink: 0; overflow: hidden; }
+    #view-cake .info-photo img { width: 100%; height: 100%; object-fit: cover; }
+    #view-cake .info-text { flex: 1; font-size: 14px; line-height: 1.6; color: #333; word-break: break-all; }
+
+    /* 草莓蛋糕密钥成功后的档案页（保留暗黑档案风） */
+    #view-cake-after .info-list { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    #view-cake-after .info-row { display: flex; gap: 15px; padding: 20px 0; border-bottom: 1px solid #ddd; align-items: center; }
+    #view-cake-after .info-row:last-child { border-bottom: none; }
+    #view-cake-after .info-photo { width: 120px; height: 160px; border: 2px solid #8b0000; box-shadow: 0 4px 10px rgba(139, 0, 0, 0.3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+    #view-cake-after .info-photo img { width: 100%; height: 100%; object-fit: cover; }
+    #view-cake-after .info-text { flex: 1; color: #111; font-size: 16px; font-weight: bold; letter-spacing: 1px; word-break: break-all; }
+    #view-cake-after .final-center-img { text-align: center; margin-top: 40px; }
+    #view-cake-after .final-center-img img { max-width: 80%; border-radius: 8px; }
+
+    /* 响应式调整 */
+    @media (max-width: 900px) {
+        .sidebar-left, .sidebar-right { display: none; }
+        .home-layout { padding: 0 10px; }
+    }
+</style>
+
+<!-- 顶部导航栏 -->
+<div class="forum-topbar">
+    <div class="forum-logo-area">
+        <img src="assets/img/logo.png" alt="论坛Logo" onerror="this.style.display='none'">
+    </div>
+    <div class="forum-title">斯芬特里奇论坛</div>
+    <div class="forum-nav-links">
+        <a onclick="showToast('登录后即可查看')">首页</a>
+        <a onclick="showToast('登录后即可查看')">版块</a>
+        <a onclick="showToast('登录后即可查看')">创作</a>
+        <a onclick="showToast('登录后即可查看')">活动</a>
+    </div>
+    <div class="forum-search-area">
+        <input type="text" id="forumSearch" placeholder="search...">
+    </div>
+</div>
+
+<!-- ==================== 主论坛页面（首页） ==================== -->
+<div id="view-home" class="view active">
+    <div class="home-layout">
+        <div class="sidebar-left">
+            <div class="sidebar-title">版块列表</div>
+            <ul class="sidebar-menu">
+                <li class="active">📌 全部主题</li>
+                <li>🔥 热门讨论</li>
+                <li>💡 创作展示</li>
+                <li>📢 公告栏</li>
+                <li>🛠️ 故障反馈</li>
+            </ul>
+        </div>
+        <div class="main-content-center">
+            <div class="forum-post-list">
+                <div class="forum-post">
+                    <div class="post-header">
+                        <div class="post-avatar"></div>
+                        <span class="post-username">阿克萨斯 <管理员></span>
+                        <span class="post-time">发表于 2013.5.14</span>
+                    </div>
+                    <div class="post-title"><置顶> 斯芬特里奇论坛介绍</div>
+                    <div class="post-content">该论坛为斯芬特里奇爱好者聚集地，供广大爱好者交流、分享之用。希望大家可以在论坛内体会到和谐，友好的社交氛围。请注意：在论坛内请不要大量讨论无关内容、发布斯芬特里奇的负面内容或是谩骂论坛内成员。</div>
+                    <div class="comment-section">
+                        <div class="comment-title">查看评论 (237)</div>
+                        <div class="comment-item">
+                            <div class="comment-avatar"></div>
+                            <div class="comment-content"><span class="comment-username">柳叶青：</span><span>论坛最近管理是不是松了？感觉这两天看到好多乱七八糟的人来论坛。</span></div>
+                                                   </div>
+            <div class="comment-item">
+                <div class="comment-avatar"></div>
+                <div class="comment-content"><span class="comment-username">月明：</span><span>老大老大我做梦梦见斯芬特里奇娘了👍</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="forum-post">
+                    <div class="post-header">
+                        <div class="post-avatar"></div>
+                        <span class="post-username">月明</span>
+                        <span class="post-time">发表于 2026.8.30</span>
+                    </div>
+                    <div class="post-title">8.30日取货码</div>
+                    <div class="post-content">1241244144255231，不要加空格</div>
+                    <div class="comment-section">
+                        <div class="comment-title">查看评论 (3)</div>
+                        <div class="comment-item">
+                            <div class="comment-avatar"></div>
+                            <div class="comment-content"><span class="comment-username">HISU111：</span><span>收到，这就整理进货物名单</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="forum-post">
+                    <div class="post-header">
+                        <div class="post-avatar"></div>
+                        <span class="post-username">玛利亚815</span>
+                        <span class="post-time">发表于 2023.4.6</span>
+                    </div>
+                    <div class="post-title">晚上吃什么 @阿克萨斯</div>
+                    <div class="post-content">我饿了</div>
+                    <div class="comment-section">
+                        <div class="comment-title">查看评论 (32)</div>
+                        <div class="comment-item">
+                            <div class="comment-avatar"></div>
+                            <div class="comment-content"><span class="comment-username">阿克萨斯：</span><span>......我给你做饭去。</span></div>
+                         </div>
+            <div class="comment-item">
+                <div class="comment-avatar"></div>
+                <div class="comment-content"><span class="comment-username">飞翔的闲人：</span><span>您二位锁死谢谢。</span></div>
+                          </div>
+            <div class="comment-item">
+                <div class="comment-avatar"></div>
+                <div class="comment-content"><span class="comment-username">柳叶青：</span><span>依旧管理员带头发无关信息（</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-content-btn" onclick="showToast('当前设备无法登录')">
+                    登录查看更多内容
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-right">
+            <div class="login-card" onclick="showToast('当前设备无法登录')">
+                <div class="login-avatar">👤</div>
+                <div class="login-text">点击登录</div>
+                <div class="login-desc">登录后查看更多内容</div>
+            </div>
+            <div class="stats-card">
+                <div class="sidebar-title" style="border:none; padding-bottom:0; margin-bottom:10px;">论坛统计</div>
+                <div class="stats-item"><span>今日发帖</span><span>0</span></div>
+                <div class="stats-item"><span>会员总数</span><span>1,204</span></div>
+                <div class="stats-item"><span>在线人数</span><span>36755</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“大巴”跳转界面 ==================== -->
+<div id="view-bus" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-header">
+                    <div class="post-avatar"></div>
+                    <span class="post-username">HUSU111</span>
+                    <span class="post-time">发表于 2026.8.29</span>
+                </div>
+                <div class="post-title">斯芬特里奇喜欢吃什么？</div>
+                <div class="post-content">如题</div>
+                <div class="comment-section">
+                    <div class="comment-title">查看评论 (1)</div>
+                    <div class="comment-item">
+                        <div class="comment-avatar"></div>
+                        <div class="comment-content"><span class="comment-username">月明：</span><span>草莓蛋糕。以及：取货码我明天发过来</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“草莓蛋糕”初始界面（21栏+密钥） ==================== -->
+<div id="view-cake" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="key-area">
+            <input type="text" id="cakeKeyInput" placeholder="输入密钥">
+        </div>
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a01 .png" alt="/media/img/a01 .png"></div>
+                <div class="info-text">巧克力蛋糕。1985年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a02.png" alt="/media/img/a02.png"></div>
+                <div class="info-text">慕斯蛋糕。1992年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a03.png" alt="/media/img/a03.png"></div>
+                <div class="info-text">水果蛋糕。1988年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a04.png" alt="/media/img/a04.png"></div>
+                <div class="info-text">提拉米苏蛋糕。1993年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a05.png" alt="/media/img/a05.png"></div>
+                <div class="info-text">乳酪蛋糕。2001年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a06.png" alt="/media/img/a06.png"></div>
+                <div class="info-text">芝士蛋糕。1992年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a07.png" alt="/media/img/a07.png"></div>
+                <div class="info-text">老式奶油蛋糕。1981年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a08.png" alt="/media/img/a08.png"></div>
+                <div class="info-text">轻乳酪蛋糕。1995年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a09.png" alt="/media/img/a09.png"></div>
+                <div class="info-text">卡通生日蛋糕。1999年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a10.png" alt="/media/img/a10.png"></div>
+                <div class="info-text">寿桃蛋糕。1979年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a11.png" alt="/media/img/a11.png"></div>
+                <div class="info-text">普通奶油蛋糕。1988年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/a12.png" alt="/media/img/a12.png"></div>
+                <div class="info-text">布朗尼蛋糕。1991年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a13.png" alt="/media/img/a13.png"></div>
+                <div class="info-text">撒哈蛋糕。1983年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a14.png" alt="/media/img/a14.png"></div>
+                <div class="info-text">蛋糕卷。1995年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a15.png" alt="/media/img/a15.png"></div>
+                <div class="info-text">大理石蛋糕。1990年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a16.png" alt="/media/img/a16.png"></div>
+                <div class="info-text">白巧蛋糕。1987年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a17.png" alt="/media/img/a17.png"></div>
+                <div class="info-text">海绵蛋糕。1995年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a18.png" alt="/media/img/a18.png"></div>
+                <div class="info-text">沙架蛋糕。1992年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a19.png" alt="/media/img/a19.png"></div>
+                <div class="info-text">纸杯蛋糕。2002年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a20.png" alt="/media/img/a20.png"></div>
+                <div class="info-text">动物奶油蛋糕。1992年生产。8月30日由大巴运输</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo">><img src="/media/img/a21.png" alt="/media/img/a21.png"></div>
+                <div class="info-text">黑森林蛋糕。1989年生产。8月30日由大巴运输</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“草莓蛋糕”密钥成功后的全新界面（21栏+末尾图片） ==================== -->
+<div id="view-cake-after" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="info-list">
+            <!-- 🔁 此处的 21 个信息栏需要你自己重新写文本和重新放照片，与之前完全不同 -->
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/1.jpg" alt="/media/img/1.jpg"></div>
+                <div class="info-text">陈旭，男，1985，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/2.jpg" alt="/media/img/2.jpg"></div>
+                <div class="info-text">赵启明，男，1992，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/3.jpg" alt="/media/img/3.jpg"></div>
+                <div class="info-text">周文彬，男，1988，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/4.jpg" alt="/media/img/4.jpg"></div>
+                <div class="info-text">林素秋，女，1993，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/5.jpg" alt="/media/img/5.jpg"></div>
+                <div class="info-text">叶婉红，女，2001，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/6.jpg" alt="/media/img/6.jpg"></div>
+                <div class="info-text">邱静，女，1992，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/7.jpg" alt="/media/img/7.jpg"></div>
+                <div class="info-text">高远，男，1981，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/8.jpg" alt="/media/img/8.jpg"></div>
+                <div class="info-text">梁子安，男，1995，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/9.jpg" alt="/media/img/9.jpg"></div>
+                <div class="info-text">孙德福，男，1999，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/10.jpg" alt="/media/img/10.jpg"></div>
+                <div class="info-text">沈建国，男，1979，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/11.jpg" alt="/media/img/11.jpg"></div>
+                <div class="info-text">顾长明，男，1988，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/12.jpg" alt="/media/img/12.jpg"></div>
+                <div class="info-text">曾顺，女，1991，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/13.jpg" alt="/media/img/13.jpg"></div>
+                <div class="info-text">汪娅菲，女，1983，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/14.jpg" alt="/media/img/14.jpg"></div>
+                <div class="info-text">许志强，男，1995，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/15.jpg" alt="/media/img/15.jpg"></div>
+                <div class="info-text">李成业，男，1990，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/16.jpg" alt="/media/img/16.jpg"></div>
+                <div class="info-text">赵文林，男，1987，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/17.jpg" alt="/media/img/17.jpg"></div>
+                <div class="info-text">李新伟，男，1995，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/18.jpg" alt="/media/img/18.jpg"></div>
+                <div class="info-text">周勇，男，1992，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/19.jpg" alt="/media/img/19.jpg"></div>
+                <div class="info-text">王志伟，男，2002，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/20.jpg" alt="/media/img/20.jpg"></div>
+                <div class="info-text">楚萧，男，1992，8月30日乘坐大巴</div>
+            </div>
+            <div class="info-row">
+                <div class="info-photo"><img src="/media/img/21.jpg" alt="/media/img/21.jpg"></div>
+                <div class="info-text">沈让，男，1989，8月30日乘坐大巴</div>
+            </div>
+        </div>
+        <div class="final-center-img">
+            <img src="/media/img/message1.png" alt="/media/img/message1.png" onerror="this.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“help”跳转界面 ==================== -->
+<div id="view-help" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-title">密切关注</div>
+                <div class="post-content">
+                     <a href="level2.html" target="_blank">http//BAM.A-145.news.com/</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“斯芬特里奇”跳转界面 ==================== -->
+<div id="view-sphinx" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-title">关于斯芬特里奇</div>
+                <div class="post-content">斯芬特里奇是一个可爱的红色卡通生物，性格友善，喜好游泳，爱吃甜食，是该论坛的核心形象。对其名字需遵循首字母大写、后续字母小写的写法（既标准英文名书写方法），以表明其是一个人物形象。</div>
+                <div class="post-content"><strong>请注意：斯芬特里奇仅有“Sephanterich”这一种英文名字。若见到其它拼写形式的名字，点击后所造成的结果该论坛概不负责！</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“一条于”跳转界面 ==================== -->
+<div id="view-yitiaoyu" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-header">
+                    <div class="post-avatar"></div>
+                    <span class="post-username">一条于</span>
+                    <span class="post-time">发表于 2026.10.1</span>
+                </div>
+                <div class="post-title">这是一条与剧情无关的帖子</div>
+                <div class="post-content">在这里对下述人物表示衷心的感谢：</div>
+                <div class="comment-section">
+                    <div class="comment-title">查看评论 (1)</div>
+                    <div class="comment-item">
+                        <div class="comment-avatar"></div>
+                        <div class="comment-content"><span class="comment-username">一条于：</span><span>非常感谢给我提出宝贵意见并支持我的朋友们👍</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 搜索“异常管控局”跳转界面 ==================== -->
+<div id="view-ycgkj" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-header">
+                    <div class="post-avatar"></div>
+                    <span class="post-username">阿克萨斯</span>
+                    <span class="post-time">发表于 2019.12.24</span>
+                </div>
+                <div class="post-title">我整出来一个网站</div>
+                <div class="post-content">能模拟出来一些人的电子记忆，虽然不是很稳定（有被入侵风险），但还是勉强可以用的。</div>
+<button id="secretBtn" style="padding:12px 28px; font-size:16px; cursor:pointer; border:1px solid #333; background:#fff; border-radius:6px;">https://sephanterich-official-forum.org.html</button>
+
+<!-- 自定义密码弹窗 -->
+<div id="pwdModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:30px; border-radius:10px; text-align:center; max-width:400px; width:90%;">
+        <input type="text" id="pwdInput" autocomplete="off" style="width:100%; padding:12px; font-size:16px; border:2px solid #ccc; border-radius:6px; outline:none; text-align:center; letter-spacing:3px; box-sizing:border-box;">
+        <div id="pwdTip" style="margin-top:12px; font-size:13px; color:#d32f2f; min-height:18px;"></div>
+    </div>
+</div>
+
+<script>
+    // 📝 把下面 'SPIXRC' 换成真正的密码
+    var password = 'SPIXRC';
+    // 📝 把下面 'level3.html' 换成要跳转的网址
+    var targetUrl = 'level3.html';
+
+    var modal = document.getElementById('pwdModal');
+    var input = document.getElementById('pwdInput');
+    var tip = document.getElementById('pwdTip');
+
+    document.getElementById('secretBtn').addEventListener('click', function() {
+        input.value = '';
+        tip.textContent = '';
+        modal.style.display = 'flex';
+        setTimeout(function() { input.focus(); }, 100);
+    });
+
+    // 点击灰色背景关闭弹窗
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // 输入密码按回车提交
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (this.value.trim() === password) {
+                window.open(targetUrl, '_blank');
+                modal.style.display = 'none';
+            } else {
+                tip.textContent = '密码错误';
+                this.value = '';
+            }
+        }
+    });
+</script>
+                <div class="comment-section">
+                    <div class="comment-title">查看评论 (0)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="view-lty" class="view">
+    <div class="forum-main-content">
+        <button class="back-btn" onclick="goHome()">← 返回上级</button>
+        <div class="forum-post-list">
+            <div class="forum-post">
+                <div class="post-title">关于洛天依</div>
+                <div class="post-content">洛天依（Luo Tianyi）是Vsinger旗下虚拟歌手，出生于7月12日 ，是基于语音合成软件VOCALOID系列制作的女性虚拟歌手、虚拟偶像，形象由MOTH参与设计，声源由山新、鹿乃担任，隶属于上海禾念信息科技有限公司，是世界首位中文V家虚拟歌手。</div>
+               <div class="post-content">洛天依拥有灰色的头发、绿色的眼瞳，身着古色古香的水墨长裙，是一个感性、温柔、细致的少女，擅长用歌声表现自己和他人的感情，她的出现开辟了中国偶像市场新领域，她不仅是一个虚拟形象，更是数字时代新的品牌存在形式。</div>
+               <div class="post-content">（内容来自百度百科）</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 红屏覆盖层（默认隐藏） -->
+<div id="red-screen-overlay"></div>
+<!-- 自定义提示弹窗容器 -->
+<div id="custom-toast"></div>
+<!-- 音效播放器 -->
+<audio id="secret-audio" src="assets/audio/secret.mp3" preload="auto"></audio>
+
+<script>
+    function showToast(message) {
+        var toast = document.getElementById('custom-toast');
+        toast.innerText = message;
+        toast.style.display = 'block';
+        setTimeout(function() { toast.style.display = 'none'; }, 2000);
+    }
+
+    document.getElementById('forumSearch').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var keyword = this.value.trim();
+            handleSearch(keyword);
+        }
+    });
+
+    function handleSearch(keyword) {
+        var views = document.querySelectorAll('.view');
+        views.forEach(function(v) { v.classList.remove('active'); });
+
+        if (keyword === '大巴') {
+            document.getElementById('view-bus').classList.add('active');
+        } else if (keyword === '草莓蛋糕') {
+            document.getElementById('view-cake').classList.add('active');
+        } else if (keyword === 'gotohell'|| keyword === 'GOTOHELL') {
+            document.getElementById('view-help').classList.add('active');
+        } else if (keyword === '斯芬特里奇') {
+            document.getElementById('view-sphinx').classList.add('active');
+        } else if (keyword === '一条于') {
+            document.getElementById('view-yitiaoyu').classList.add('active');
+        } else if (keyword === '洛天依') {
+            document.getElementById('view-lty').classList.add('active');
+        } else if (keyword === '异常管控局') {
+            document.getElementById('view-ycgkj').classList.add('active');
+        } else {
+            document.getElementById('view-home').classList.add('active');
+            showToast('未找到相关内容');
+        }
+        document.getElementById('forumSearch').value = '';
+    }
+
+    function goHome() {
+        var views = document.querySelectorAll('.view');
+        views.forEach(function(v) { v.classList.remove('active'); });
+        document.getElementById('view-home').classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    document.getElementById('cakeKeyInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var key = this.value.trim();
+            if (key === '857142') {
+                var audio = document.getElementById('secret-audio');
+                if (audio) {
+                    audio.play().catch(function(error) { console.log("音频播放失败，请检查路径或权限"); });
+                }
+                var overlay = document.getElementById('red-screen-overlay');
+                overlay.style.display = 'flex';
+                
+                // 🚨 此处将红屏时间缩短至 700 毫秒（0.7秒）
+                setTimeout(function() {
+                    overlay.style.display = 'none';
+                    goHome(); 
+                    document.getElementById('view-home').classList.remove('active');
+                    document.getElementById('view-cake-after').classList.add('active');
+                    window.scrollTo(0, 0);
+                }, 500); 
+            } else {
+                showToast('密钥错误');
+            }
+            this.value = ''; 
+        }
+    });
+</script>
+<!-- ========================================== -->
+<!-- ARG 斯芬特里奇论坛 - 二次元风格改造版 END -->
+<!-- ========================================== --></div></body></html>

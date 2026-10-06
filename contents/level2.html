@@ -1,0 +1,233 @@
+<!DOCTYPE html><html><head><title>异常管控局官网</title><link rel="stylesheet" href="../assets/css/default.css"></head><body><div class="article-body" data-yacho-content="level2" data-yacho-format="html"><!-- ========================================== -->
+<!-- ARG 官方风格论坛 - 权威版 START -->
+<!-- ========================================== -->
+
+<style>
+    /* 全局样式：深蓝/灰/白配色，方正权威风格 */
+    body {
+        margin: 0; padding: 0; background-color: #f0f2f5;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+        color: #333; overflow-x: hidden;
+    }
+    
+    /* 顶部导航栏 */
+    .topbar {
+        background-color: #ffffff; height: 70px; 
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 40px; border-bottom: 2px solid #1a2b4c; /* 深蓝底边，体现权威 */
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        position: sticky; top: 0; z-index: 100;
+        position: relative;
+    }
+    
+    /* 左侧：图标和名称 */
+    .nav-left {
+        display: flex; align-items: center; gap: 15px; flex-shrink: 0;
+    }
+    .site-logo {
+        width: 45px; height: 45px; background-color: #e0e0e0;
+        border: 1px solid #ccc; display: flex; align-items: center; justify-content: center;
+        border-radius: 4px; overflow: hidden;
+    }
+    .site-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .site-name {
+        font-size: 18px; font-weight: bold; color: #1a2b4c;
+        letter-spacing: 1px;
+    }
+
+    /* 中间：搜索栏（绝对居中） */
+    .nav-center {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        width: 380px; /* 搜索栏宽度 */
+    }
+    .nav-center input {
+        width: 100%; padding: 10px 15px; border: 1px solid #c0c4cc;
+        border-radius: 2px; background-color: #f8f9fa; outline: none;
+        font-size: 14px; transition: all 0.3s; box-sizing: border-box;
+    }
+    .nav-center input:focus {
+        border-color: #1a2b4c; background-color: #ffffff;
+        box-shadow: 0 0 0 2px rgba(26, 43, 76, 0.1);
+    }
+
+    /* 右侧：登录入口 */
+    .nav-right { flex-shrink: 0; }
+    .login-btn {
+        padding: 8px 20px; font-size: 14px; font-weight: bold;
+        color: #1a2b4c; background: #fff; border: 1px solid #1a2b4c;
+        border-radius: 2px; cursor: pointer; transition: all 0.2s;
+    }
+    .login-btn:hover { background: #1a2b4c; color: #fff; }
+
+    /* 主体内容区：居中单帖，两侧留白 */
+    .main-content {
+        max-width: 900px; margin: 30px auto; padding: 0 20px;
+    }
+
+    /* 帖子卡片 */
+    .post-card {
+        background: #ffffff; border: 1px solid #e0e0e0;
+        border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        padding: 30px;
+    }
+    
+    /* 帖子头部 */
+    .post-header {
+        display: flex; align-items: center; margin-bottom: 20px;
+        padding-bottom: 15px; border-bottom: 1px solid #eee;
+    }
+    .post-avatar {
+        width: 48px; height: 48px; border-radius: 4px; background-color: #e0e0e0;
+        margin-right: 15px; overflow: hidden; flex-shrink: 0;
+    }
+    .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .post-meta { flex: 1; }
+    .post-username { font-size: 16px; font-weight: bold; color: #1a2b4c; }
+    .post-time { font-size: 12px; color: #999; margin-top: 4px; }
+    
+    /* 帖子标题 */
+    .post-title {
+        font-size: 22px; font-weight: bold; color: #1a2b4c;
+        margin-bottom: 20px; line-height: 1.4;
+    }
+
+    /* 帖子正文 */
+    .post-content {
+        font-size: 15px; line-height: 1.8; color: #444;
+        margin-bottom: 30px;
+    }
+    .post-content p { margin-top: 0; margin-bottom: 15px; }
+
+    /* 评论区 */
+    .comment-section {
+        background-color: #fcfcfc; border: 1px solid #eee;
+        border-radius: 2px; padding: 20px;
+    }
+    .comment-section-title {
+        font-size: 14px; font-weight: bold; color: #1a2b4c;
+        margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+    }
+    .comment-item {
+        display: flex; margin-bottom: 15px;
+        padding-bottom: 15px; border-bottom: 1px dashed #eee;
+    }
+    .comment-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .comment-avatar {
+        width: 32px; height: 32px; border-radius: 4px; background-color: #e0e0e0;
+        margin-right: 12px; overflow: hidden; flex-shrink: 0;
+    }
+    .comment-content { font-size: 14px; line-height: 1.5; color: #555; }
+    .comment-username { font-weight: bold; color: #1a2b4c; margin-right: 6px; }
+    .comment-floor { float: right; font-size: 12px; color: #bbb; }
+
+    /* 自定义提示弹窗样式 */
+    #custom-toast {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: rgba(26, 43, 76, 0.95); color: #fff;
+        padding: 15px 35px; border-radius: 4px; font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999999;
+        display: none; text-align: center; font-weight: bold;
+        pointer-events: none; animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; top: 40%; } to { opacity: 1; top: 50%; } }
+</style>
+
+<!-- 顶部导航栏 -->
+<div class="topbar">
+    <!-- 左侧：网站图标和名称 -->
+    <div class="nav-left">
+        <div class="site-logo">
+            <!-- 🖼️ 图片位置：在这里替换成你的网站图标，比如 <img src="assets/img/logo.png" alt="Logo"> -->
+        </div>
+        <div class="site-name">
+            异常管控局 <!-- 📝 这里替换成你想要的网站名称 -->
+        </div>
+    </div>
+    
+    <!-- 中间：搜索栏 -->
+    <div class="nav-center">
+        <input type="text" id="forumSearch" placeholder="请输入关键词进行搜索...">
+    </div>
+    
+    <!-- 右侧：登录界面 -->
+    <div class="nav-right">
+        <button class="login-btn" onclick="showToast('当前设备无法登录')">登录</button>
+    </div>
+</div>
+
+<!-- 主体内容区 -->
+<div class="main-content">
+    <div class="post-card">
+        <!-- 帖子头部 -->
+        <div class="post-header">
+            <div class="post-avatar">
+                <!-- 🖼️ 发帖人头像位置 -->
+            </div>
+            <div class="post-meta">
+                <div class="post-username">情报部门</div>
+                <div class="post-time">上次更新：2026.9.5 | 阅读权限：公开</div>
+            </div>
+        </div>
+        
+        <!-- 帖子标题 -->
+        <div class="post-title">
+            A-145 斯芬特里奇 可公开情报
+        </div>
+        
+        <!-- 帖子正文 -->
+        <div class="post-content">
+            <!-- 📝 文本替换位置：这里写帖子的正文内容 -->
+            <p>斯芬特里奇是一个极度危险的存在，其性质类似于邪神。其拥有广泛的教众，教内推崇活人献祭，请广大民众提防，</p>
+            <p>在2026.8.30斯芬特里奇教团致使巴士上17名人员死亡，吞噬了我们的4位研究人员后，我们找到了斯芬特里奇教团内部的论坛。现已开始围剿活动。</p>
+        </div>
+        
+        <!-- 评论区 -->
+        <div class="comment-section">
+            <div class="comment-section-title">评论区</div>
+            
+            <!-- 评论 1 -->
+            <div class="comment-item">
+                <div class="comment-avatar"></div>
+                <div class="comment-content">
+                    <span class="comment-username">“观察者”：</span>
+                    <span>你好啊，这条评论官方是看不见的，因而我可以放心对你讲话。<strong>异常管控局</strong>发现了一个对外开放的网站，虽然不知道原理，但看上去还算稳定。你应该能在<strong>斯芬特里奇论坛</strong>内找到它。因为模拟记忆还在试运行，有点地方可能需要你推动一下。对了这是密码：SPIXRC。</span>
+                    <span class="comment-floor">1楼</span>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 自定义提示弹窗容器 -->
+<div id="custom-toast"></div>
+
+<script>
+    // ========== 自定义提示弹窗函数 ==========
+    function showToast(message) {
+        var toast = document.getElementById('custom-toast');
+        toast.innerText = message;
+        toast.style.display = 'block';
+        setTimeout(function() {
+            toast.style.display = 'none';
+        }, 2000);
+    }
+
+    // ========== 搜索拦截逻辑 ==========
+    document.getElementById('forumSearch').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var keyword = this.value.trim();
+            if (keyword !== '') {
+                // 无论输入什么，都提示无权限
+                showToast('暂无权限查找相关内容');
+            } else {
+                showToast('请输入搜索内容');
+            }
+            this.value = ''; // 清空搜索框
+        }
+    });
+</script>
+<!-- ========================================== -->
+<!-- ARG 官方风格论坛 - 权威版 END -->
+<!-- ========================================== --></div></body></html>
