@@ -206,20 +206,30 @@
         .home-layout { padding: 0 10px; }
     }
 
-    /* 🆕 右下角看板娘样式 */
+        /* 🆕 右下角看板娘样式（电脑端） */
     .mascot-wrapper {
         position: fixed;
-        bottom: 90px;
-        right: 100px;
-        width: 270px; /* 正方形尺寸，可自行调整 */
+        bottom: 70px;
+        right: 120px;
+        width: 270px;
         height: 270px;
         z-index: 9999;
-        pointer-events: none; /* 确保不会遮挡网页其他元素的点击操作 */
+        pointer-events: none;
     }
     .mascot-wrapper img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* 保持图片比例，不拉伸变形 */
+        object-fit: contain;
+    }
+
+    /* 🆕 手机端：图片缩小、位置调整 */
+    @media (max-width: 900px) {
+        .mascot-wrapper {
+            bottom: 20px;
+            right: 10px;
+            width: 120px;
+            height: 120px;
+        }
     }
 </style>
 
