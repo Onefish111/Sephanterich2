@@ -128,8 +128,16 @@
   #red-screen-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ff0000; z-index: 99999; display: none; justify-content: center; align-items: center; color: white; font-size: 30px; font-weight: bold; }
 
     /* ==========================================
-       🛡️ 以下为“草莓蛋糕”系列专属样式（完全保留旧版，不改成二次元风）
+       🛡️ 以下为“草莓蛋糕”系列专属样式（保留旧版白色背景）
        ========================================== */
+    /* 🆕 修复：强制这两个页面使用纯白背景，覆盖外面的粉色渐变 */
+    #view-cake, #view-cake-after {
+        background-color: #ffffff !important; /* 强制白底 */
+        min-height: 100vh; /* 撑满屏幕，防止粉色透出 */
+        padding: 20px 0; /* 上下留点距离 */
+        box-sizing: border-box;
+    }
+
     #view-cake .key-area { text-align: right; margin-bottom: 15px; }
     #view-cake .key-area input { padding: 6px 12px; border: 1px solid #1e80ff; border-radius: 4px; outline: none; width: 180px; font-size: 14px; }
     #view-cake .info-list { background: #fff; border-radius: 6px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
@@ -153,6 +161,22 @@
     @media (max-width: 900px) {
         .sidebar-left, .sidebar-right { display: none; }
         .home-layout { padding: 0 10px; }
+    }
+
+    /* 🆕 右下角看板娘样式 */
+    .mascot-wrapper {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 180px; /* 正方形尺寸，可自行调整 */
+        height: 180px;
+        z-index: 9999;
+        pointer-events: none; /* 确保不会遮挡网页其他元素的点击操作 */
+    }
+    .mascot-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* 保持图片比例，不拉伸变形 */
     }
 </style>
 
@@ -266,6 +290,12 @@
                 <div class="stats-item"><span>在线人数</span><span>36755</span></div>
             </div>
         </div>
+    </div>
+    
+    <!-- 🆕 首页右下角看板娘 -->
+    <div class="mascot-wrapper">
+        <!-- 📝 将 src 换成你的看板娘图片路径，例如：media/img/kanbanmusume.png -->
+        <img src="media/img/kanbanmusume.png" alt="看板娘" onerror="this.style.display='none'">
     </div>
 </div>
 
