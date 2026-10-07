@@ -223,14 +223,18 @@
         object-fit: contain;
     }
 
-    /* 🆕 手机端：图片缩小、位置调整 */
-    @media (max-width: 900px) {
+        /* 🆕 手机/平板端：右侧正中，按比例缩放 */
+    @media (max-width: 1080px) {
         .mascot-wrapper {
-            bottom: 300px;
-            right: 1px;
-            width: 110px;
-            opacity: 0.7;
-            height: 110px;
+            top: 50%;           /* 距离顶部 50%，即垂直居中 */
+            bottom: auto;       /* 取消之前的贴底设置 */
+            transform: translateY(-50%); /* 让图片自身往上挪一半，完美居中 */
+            right: 3vw;         /* 距离右侧 3% 屏宽 */
+            width: 15vw;        /* 宽度是屏宽的 15% */
+            height: 15vw;
+            min-width: 60px;    /* 最小不低于 60px */
+            max-width: 100px;   /* 最大不超过 100px */
+            opacity: 0.45;      /* 半透明 */
         }
     }
 </style>
